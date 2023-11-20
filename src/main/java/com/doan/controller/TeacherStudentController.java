@@ -23,14 +23,14 @@ public class TeacherStudentController {
         return teacherStudentService.sendInvitation(teacherSudent);
     }
 
-    @PutMapping("/accept")
-    public ResponseEntity<String> acceptInvitation(@RequestBody TeacherStudentRequest request) {
-        return teacherStudentService.acceptInvitation(request);
+    @PutMapping("/accept/{id}")
+    public ResponseEntity<String> acceptInvitation(@PathVariable Long id) {
+        return teacherStudentService.updateStatus(id);
     }
 
-    @PutMapping("/not_accept")
-    public ResponseEntity<String> not_acceptInvitation(@RequestBody TeacherStudentRequest request) {
-        return teacherStudentService.not_acceptInvitation(request);
+    @PutMapping("/not_accept/{id}")
+    public ResponseEntity<String> not_acceptInvitation(@PathVariable Long id) {
+        return teacherStudentService.not_acceptInvitation(id);
     }
 
     @GetMapping("/{teacherId}")

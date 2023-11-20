@@ -2,6 +2,7 @@ package com.doan.controller;
 
 import com.doan.config.Constants;
 import com.doan.dto.GetStudent;
+import com.doan.dto.MaserDetailUpdateCouncli;
 import com.doan.entity.Coucil;
 import com.doan.entity.Master;
 import com.doan.entity.MasterDetail;
@@ -107,14 +108,12 @@ public class MasterDetailController {
         return masterDetailService.editByGvhd(editMasterDetailByGVHDRequest);
     }
 
-    @PutMapping("/{councliId}/master_detail/{masterDetailId}")
-    public ResponseEntity<String> addMasterDetailToCouncli(
-            @PathVariable Long councliId,
-            @PathVariable Long masterDetailId) {
+    @PutMapping("/councli")
+    public ResponseEntity<String> addMasterDetailToCouncli( @RequestBody MaserDetailUpdateCouncli updateCouncli) {
 
-        Coucil councli = coucilRepository.findById(councliId).orElseThrow();
+        Coucil councli = coucilRepository.findById(updateCouncli.getCoucilId()).orElseThrow();
 
-        MasterDetail masterDetail = masterDetailRepository.findById(masterDetailId) .orElseThrow();
+        MasterDetail masterDetail = masterDetailRepository.findById(updateCouncli.getMasterDetailId()) .orElseThrow();
 
         masterDetail.setCoucil(councli);
 

@@ -11,4 +11,6 @@ public class StudentInvitationDTO {
     private String studentClass;
     private String titleNameVn;
     private String titleNameEn;
+    private Long id;
+    private String masterName;
 }

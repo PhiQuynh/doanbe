@@ -1,6 +1,7 @@
 package com.doan.repository;
 
 import com.doan.entity.MasterDetail;
+import com.doan.entity.Teacher;
 import com.doan.entity.TeacherSudent;
 import com.doan.entity.TeachershipStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,9 +11,11 @@ import java.util.List;
 
 public interface TeacherStudentRepository extends JpaRepository<TeacherSudent, Long> {
 
-    TeacherSudent findByTeacherTeacherId(Long teacherId);
+    TeacherSudent findFirstByTeacherTeacherId(Long teacherId);
 
-    TeacherSudent findByDetailMasterDetailId(Long masterDetailId);
+    TeacherSudent findFirstByDetailMasterDetailId(Long masterDetailId);
+
+    TeacherSudent findByTeacherAndDetail(Teacher teacher, MasterDetail detail);
 
 //    @Query("SELECT md FROM MasterDetail md WHERE md.teacherHD.id = :teacherId AND md.statusTeacher = :status")
 //    List<MasterDetail> findByTeacherIdAndStatus(Long teacherId, TeachershipStatus status);

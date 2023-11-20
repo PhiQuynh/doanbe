@@ -11,6 +11,8 @@ public class StudentAcceptDTO {
     private String titleNameVn;
     private String titleNameEn;
     private String teacherPB;
-    private Double scoreArgument;
     private Double scoreCoucil;
+    private Double scoreArgument;
+    private String coucilName;
+    private String masterName;
 }

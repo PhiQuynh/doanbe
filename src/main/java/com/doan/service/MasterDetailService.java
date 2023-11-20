@@ -31,7 +31,7 @@ public class MasterDetailService {
     TeacherRepository teacherRepository;
     @Autowired
     MasterDetailRepository masterDetailRepository;
-    @Transactional
+
     public ResponseEntity<?> addMasterDetail(AddMasterDetailRequest addMasterDetailRequest) {
         try{
             MasterDetail masterDetail = new MasterDetail();
@@ -43,8 +43,8 @@ public class MasterDetailService {
             Master master = masterRepository.findById(addMasterDetailRequest.getMasterId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid MasterId: " + addMasterDetailRequest.getMasterId()));
             masterDetail.setMaster(master);
-            Teacher teacher = teacherRepository.findById(addMasterDetailRequest.getTeacherHDId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + addMasterDetailRequest.getTeacherHDId()));
+//            Teacher teacher = teacherRepository.findById(addMasterDetailRequest.getTeacherHDId())
+//                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + addMasterDetailRequest.getTeacherHDId()));
 //            masterDetail.setTeacherHD(teacher);
             masterDetailRepository.save(masterDetail);
             return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_SUCCES_ADD), HttpStatus.OK);
@@ -418,6 +418,9 @@ public class MasterDetailService {
                 }
                 if (masterDetail.getScoreArgument() != null){
                     builder.scoreArgument(masterDetail.getScoreArgument());
+                }
+                if(masterDetail.getCoucil() != null){
+                    builder.councliName(masterDetail.getCoucil().getCoucilName());
                 }
        return builder.build();
    }

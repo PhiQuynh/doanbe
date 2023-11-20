@@ -22,4 +22,5 @@ public class GetStudent {
     public String startDate;
     public String endDate;
     public String teacherPBName;
+    public String councliName;
 }

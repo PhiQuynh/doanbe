@@ -1,35 +1,26 @@
 package com.doan.service;
 
 
-import com.doan.entity.FileInfo;
-import com.doan.repository.FileInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.stream.Stream;
 
-//@Service
-//public class FileDBSerciceImpl {
-//
-////    SELECT * FROM doan.teachers as d WHERE d.subject_id = 1;
-//}
 @Service
 @RequiredArgsConstructor
 @CrossOrigin()
 public class FileDBServiceImpl implements FileDBService{
 
-    private final Path root = Paths.get("files");
+    private final Path root = Paths.get("uploads");
 
-    private final FileInfoRepository infoRepository;
+//    private final FileInfoRepository infoRepository;
 
     @Override
     public void init() {
@@ -40,22 +31,40 @@ public class FileDBServiceImpl implements FileDBService{
         }
     }
 
+//    @Override
+//    public void save(MultipartFile file) throws IOException {
+//        if (file == null || file.isEmpty()) {
+//            throw new RuntimeException("File is null or empty");
+//
+//        }
+//        Path directory = Paths.get(root.toUri());
+//        if (!Files.exists(directory)) {
+//            Files.createDirectories(directory);
+//        }
+//        try {
+//            if(file != null && !file.isEmpty()){
+//                FileInfo fileInfo = new FileInfo();
+//                fileInfo.setName(file.getOriginalFilename());
+//                fileInfo.setUrl(root + "/" + file.getOriginalFilename());
+//                infoRepository.save(fileInfo);
+//            }
+//            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+//        } catch (Exception e) {
+//            if (e instanceof FileAlreadyExistsException) {
+//                throw new RuntimeException("A file of that name already exists.");
+//            }
+//
+//            throw new RuntimeException(e.getMessage());
+//        }
+//
+//    }
+
     @Override
     public void save(MultipartFile file) {
         try {
-            if(file != null && !file.isEmpty()){
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setName(file.getOriginalFilename());
-                fileInfo.setUrl(root + "/" + file.getOriginalFilename());
-                infoRepository.save(fileInfo);
-            }
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
         } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("A file of that name already exists.");
-            }
-
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
 

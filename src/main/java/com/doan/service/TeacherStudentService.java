@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
@@ -42,55 +43,84 @@ public class TeacherStudentService {
         teacherStudentRepository.save(sudent);
         return new ResponseEntity<>("Chờ xác nhận", HttpStatus.OK);
     }
-
-    public ResponseEntity<String> acceptInvitation(@RequestBody TeacherStudentRequest request) {
-        Long teacherId = request.getTeacherId();
-        Long masterDetailId = request.getMasterDetailId();
-
-        // Kiểm tra và xử lý dữ liệu truyền vào (nếu cần)
-
-        TeacherSudent teacherStudent = new TeacherSudent();
-
-        if (teacherId != null) {
-            teacherStudent = teacherStudentRepository.findByTeacherTeacherId(teacherId);
-        } else if (masterDetailId != null) {
-            teacherStudent = teacherStudentRepository.findByDetailMasterDetailId(masterDetailId);
-        }
+//    @PutMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus( Long id) {
+        TeacherSudent teacherStudent = teacherStudentRepository.findById(id).orElse(null);
 
         if (teacherStudent == null) {
-            // Xử lý lỗi khi không tìm thấy TeacherStudent
             return new ResponseEntity<>("Không tìm thấy TeacherStudent", HttpStatus.NOT_FOUND);
         }
 
         teacherStudent.setStatus(TeachershipStatus.ACCEPTED);
         teacherStudentRepository.save(teacherStudent);
 
-        return new ResponseEntity<>("Lời mời đã được chấp nhận", HttpStatus.OK);
+        return new ResponseEntity<>("Trạng thái đã được cập nhật", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> not_acceptInvitation(@RequestBody TeacherStudentRequest request) {
-        Long teacherId = request.getTeacherId();
-        Long masterDetailId = request.getMasterDetailId();
+//    public ResponseEntity<String> acceptInvitation( TeacherStudentRequest request) {
+//        Long teacherId = request.getTeacherId();
+//        Long masterDetailId = request.getMasterDetailId();
+//
+//        TeacherSudent teacherStudent = new TeacherSudent();
+//
+//        if (teacherId != null) {
+//            teacherStudent = teacherStudentRepository.findFirstByTeacherTeacherId(teacherId);
+//        } else if (masterDetailId != null) {
+//            teacherStudent = teacherStudentRepository.findFirstByDetailMasterDetailId(masterDetailId);
+//        }
+////
+////        if (teacherStudent == null) {
+////            return new ResponseEntity<>("Không tìm thấy TeacherStudent", HttpStatus.NOT_FOUND);
+////        }
+//
+//        teacherStudent.setStatus(TeachershipStatus.ACCEPTED); // Cập nhật trạng thái thành "accept"
+//
+////        try {
+//            teacherStudentRepository.save(teacherStudent);
+////        } catch (Exception e) {
+////            // Xử lý lỗi khi cập nhật không thành công
+////            return new ResponseEntity<>("Lỗi khi cập nhật trạng thái", HttpStatus.INTERNAL_SERVER_ERROR);
+////        }
+//
+//        return new ResponseEntity<>("Lời mời đã được chấp nhận", HttpStatus.OK);
+//    }
 
-        // Kiểm tra và xử lý dữ liệu truyền vào (nếu cần)
 
-        TeacherSudent teacherStudent = new TeacherSudent();
 
-        if (teacherId != null) {
-            teacherStudent = teacherStudentRepository.findByTeacherTeacherId(teacherId);
-        } else if (masterDetailId != null) {
-            teacherStudent = teacherStudentRepository.findByDetailMasterDetailId(masterDetailId);
-        }
+    @Transactional
+    public ResponseEntity<String> not_acceptInvitation( Long id) {
+        TeacherSudent teacherStudent = teacherStudentRepository.findById(id).orElse(null);
 
         if (teacherStudent == null) {
-            // Xử lý lỗi khi không tìm thấy TeacherStudent
             return new ResponseEntity<>("Không tìm thấy TeacherStudent", HttpStatus.NOT_FOUND);
         }
 
         teacherStudent.setStatus(TeachershipStatus.NOTACCEPTED);
         teacherStudentRepository.save(teacherStudent);
 
-        return new ResponseEntity<>("Không chấp nhận lời mời", HttpStatus.OK);
+        return new ResponseEntity<>("Trạng thái đã được cập nhật", HttpStatus.OK);
+//        Long teacherId = request.getTeacherId();
+//        Long masterDetailId = request.getMasterDetailId();
+//
+//        // Kiểm tra và xử lý dữ liệu truyền vào (nếu cần)
+//
+//        TeacherSudent teacherStudent = new TeacherSudent();
+//
+//        if (teacherId != null) {
+//            teacherStudent = teacherStudentRepository.findFirstByTeacherTeacherId(teacherId);
+//        } else if (masterDetailId != null) {
+//            teacherStudent = teacherStudentRepository.findFirstByDetailMasterDetailId(masterDetailId);
+//        }
+//
+//        if (teacherStudent == null) {
+//            // Xử lý lỗi khi không tìm thấy TeacherStudent
+//            return new ResponseEntity<>("Không tìm thấy TeacherStudent", HttpStatus.NOT_FOUND);
+//        }
+//
+//        teacherStudent.setStatus(TeachershipStatus.NOTACCEPTED);
+//        teacherStudentRepository.save(teacherStudent);
+//
+//        return new ResponseEntity<>("Không chấp nhận lời mời", HttpStatus.OK);
     }
 
     public ResponseEntity<List<StudentInvitationDTO>> getStudentsByTeacherId(Long teacherId) {
@@ -105,7 +135,10 @@ public class TeacherStudentService {
             student.setStudentClass(teacherStudent.getDetail().getStudentClass());
             student.setTitleNameVn(teacherStudent.getDetail().getTitleNameVn());
             student.setTitleNameEn(teacherStudent.getDetail().getTitleNameEn());
-
+            student.setId(teacherStudent.getId());
+            if(teacherStudent.getDetail().getMaster() != null){
+                student.setMasterName(teacherStudent.getDetail().getMaster().getMasterName());
+            }
             students.add(student);
         }
 
@@ -113,7 +146,7 @@ public class TeacherStudentService {
     }
 
     public ResponseEntity<List<StudentAcceptDTO>> getStudentsByTeacherIdAccept(Long teacherId) {
-        List<TeacherSudent> teacherStudents = teacherStudentRepository.findByStudentTeacherId(teacherId);
+        List<TeacherSudent> teacherStudents = teacherStudentRepository.findByStudentTeacherIdAccept(teacherId);
         List<StudentAcceptDTO> students = new ArrayList<>();
 
         for (TeacherSudent teacherStudent : teacherStudents) {
@@ -124,9 +157,17 @@ public class TeacherStudentService {
             student.setStudentClass(teacherStudent.getDetail().getStudentClass());
             student.setTitleNameVn(teacherStudent.getDetail().getTitleNameVn());
             student.setTitleNameEn(teacherStudent.getDetail().getTitleNameEn());
-            student.setTeacherPB(teacherStudent.getDetail().getTeacherPB().getTeacherName());
             student.setScoreArgument(teacherStudent.getDetail().getScoreArgument());
             student.setScoreCoucil(teacherStudent.getDetail().getScoreCoucil());
+            if(teacherStudent.getDetail().getMaster() != null){
+                student.setMasterName(teacherStudent.getDetail().getMaster().getMasterName());
+            }
+            if(teacherStudent.getDetail().getCoucil() != null){
+                student.setCoucilName(teacherStudent.getDetail().getCoucil().getCoucilName());
+            }
+            if(teacherStudent.getDetail().getTeacherPB() != null){
+                student.setTeacherPB(teacherStudent.getDetail().getTeacherPB().getTeacherName());
+            }
             students.add(student);
         }
 
