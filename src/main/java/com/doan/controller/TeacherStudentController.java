@@ -15,30 +15,30 @@ import java.util.List;
 @RequestMapping("/teacherStudent")
 public class TeacherStudentController {
 
-    @Autowired
-    TeacherStudentService teacherStudentService;
-
-    @PostMapping("/invite")
-    public ResponseEntity<String> send(@RequestBody TeacherStudentRequest teacherSudent){
-        return teacherStudentService.sendInvitation(teacherSudent);
-    }
-
-    @PutMapping("/accept/{id}")
-    public ResponseEntity<String> acceptInvitation(@PathVariable Long id) {
-        return teacherStudentService.updateStatus(id);
-    }
-
-    @PutMapping("/not_accept/{id}")
-    public ResponseEntity<String> not_acceptInvitation(@PathVariable Long id) {
-        return teacherStudentService.not_acceptInvitation(id);
-    }
-
-    @GetMapping("/{teacherId}")
-    public ResponseEntity<List<StudentInvitationDTO>> getInvitations(@PathVariable Long teacherId) {
-        return teacherStudentService.getStudentsByTeacherId(teacherId);
-    }
-    @GetMapping("/teacher_accept/{teacherId}")
-    public ResponseEntity<List<StudentAcceptDTO>> getAccept(@PathVariable Long teacherId) {
-        return teacherStudentService.getStudentsByTeacherIdAccept(teacherId);
-    }
+//    @Autowired
+//    TeacherStudentService teacherStudentService;
+//
+//    @PostMapping("/invite")
+//    public ResponseEntity<String> send(@RequestBody TeacherStudentRequest teacherSudent){
+//        return teacherStudentService.sendInvitation(teacherSudent);
+//    }
+//
+//    @PutMapping("/accept/{id}")
+//    public ResponseEntity<String> acceptInvitation(@PathVariable Long id) {
+//        return teacherStudentService.updateStatus(id);
+//    }
+//
+//    @PutMapping("/not_accept/{id}")
+//    public ResponseEntity<String> not_acceptInvitation(@PathVariable Long id) {
+//        return teacherStudentService.not_acceptInvitation(id);
+//    }
+//
+//    @GetMapping("/{teacherId}")
+//    public ResponseEntity<List<StudentInvitationDTO>> getInvitations(@PathVariable Long teacherId) {
+//        return teacherStudentService.getStudentsByTeacherId(teacherId);
+//    }
+//    @GetMapping("/teacher_accept/{teacherId}")
+//    public ResponseEntity<List<StudentAcceptDTO>> getAccept(@PathVariable Long teacherId) {
+//        return teacherStudentService.getStudentsByTeacherIdAccept(teacherId);
+//    }
 }

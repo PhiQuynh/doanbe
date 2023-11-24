@@ -38,15 +38,6 @@ public class MasterDetailController {
     @Autowired
     MasterDetailRepository masterDetailRepository;
 
-//    @GetMapping("/gvhd/{teacherId}")
-//    public ResponseEntity<?> getMasterDetailByGVHD(@PathVariable Long teacherId) {
-//        Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-//        if(teacher.isPresent()) {
-//            return masterDetailService.getMasterDetailByGVHD(teacher);
-//        }
-//        return new ResponseEntity<>(new ResponErr(Constants.ERR_CODE, Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR_2), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
     @GetMapping("/gvpb/{teacherId}")
     public ResponseEntity<?> getMasterDetailByGVPB(@PathVariable Long teacherId) {
         Optional<Teacher> teacher = teacherRepository.findById(teacherId);
@@ -75,7 +66,7 @@ public class MasterDetailController {
     @GetMapping("/successful-defense/{masterId}")
     public ResponseEntity<?> getSuccessfulDefenseStudents(@PathVariable Long masterId) {
         Optional<Master> master = masterRepository.findById(masterId);
-        return masterDetailService.                         getSuccessfulDefenseStudents1(master.get());
+        return masterDetailService.getSuccessfulDefenseStudents1(master.get());
     }
 
     @PostMapping()
@@ -109,7 +100,7 @@ public class MasterDetailController {
     }
 
     @PutMapping("/councli")
-    public ResponseEntity<String> addMasterDetailToCouncli( @RequestBody MaserDetailUpdateCouncli updateCouncli) {
+    public ResponseEntity<?> addMasterDetailToCouncli( @RequestBody MaserDetailUpdateCouncli updateCouncli) {
 
         Coucil councli = coucilRepository.findById(updateCouncli.getCoucilId()).orElseThrow();
 
@@ -119,7 +110,7 @@ public class MasterDetailController {
 
         masterDetailRepository.save(masterDetail);
 
-        return ResponseEntity.ok("MasterDetail added to Councli successfully");
+        return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MASTER_DETAIL_ADD_COUNCLI), HttpStatus.OK);
     }
 
     @GetMapping()
@@ -131,6 +122,37 @@ public class MasterDetailController {
     @GetMapping("/getById/{masterDetailId}")
     public GetStudent getMater(@PathVariable Long masterDetailId){
         return masterDetailService.getMaterById(masterDetailId);
+    }
+
+    @GetMapping("/getSVbyTeacherHD/{teacher_hd_id}")
+    public  ResponseEntity<?> getStudent(@PathVariable Long teacher_hd_id){
+        return masterDetailService.getStudent(teacher_hd_id);
+    }
+
+    @GetMapping("/getSVInviteTeacher/{teacher_hd_id}")
+    public  ResponseEntity<?> getStudentInvite(@PathVariable Long teacher_hd_id){
+        return masterDetailService.getStudentInvite(teacher_hd_id);
+    }
+
+    @PutMapping("/{masterDetailId}/accept/{teacherHDid}/status")
+    public MasterDetail updateStatus(
+            @PathVariable Long masterDetailId,
+            @PathVariable Long teacherHDid
+    ) {
+      return masterDetailService.acceptMasterDetails(masterDetailId, teacherHDid);
+    }
+
+    @PutMapping("/{masterDetailId}/not_accept/{teacherHDid}/status")
+    public MasterDetail updateNotAcceptStatus(
+            @PathVariable Long masterDetailId,
+            @PathVariable Long teacherHDid
+    ) {
+        return masterDetailService.updateStatusNotAccept(masterDetailId, teacherHDid);
+    }
+
+    @GetMapping("/count")
+    public Long getCountOfMasterDetails() {
+        return masterDetailRepository.count();
     }
 
 }

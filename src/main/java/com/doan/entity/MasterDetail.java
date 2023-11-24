@@ -42,15 +42,18 @@ public class MasterDetail {
     @Column(name = "status_teacher")
     private Long statusTeacher;
 
+    @Enumerated(EnumType.STRING)
+    private TeachershipStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_id", nullable = false)
     @JsonBackReference
     private Master master;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "teacher_hd_id")
-//    @JsonBackReference
-//    private Teacher teacherHD;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_hd_id")
+    @JsonBackReference
+    private Teacher teacherHD;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_pb_id")
@@ -62,7 +65,4 @@ public class MasterDetail {
     @JsonBackReference
     private Coucil coucil;
 
-    @OneToMany(mappedBy = "detail", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<TeacherSudent> sudentList;
 }

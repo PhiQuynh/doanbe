@@ -1,10 +1,7 @@
 package com.doan.service;
 
 import com.doan.config.Constants;
-import com.doan.dto.GetMaterDetail;
-import com.doan.dto.GetStudent;
-import com.doan.dto.MasterDetailByTeacherResponDTO;
-import com.doan.dto.MasterDetailDTO;
+import com.doan.dto.*;
 import com.doan.entity.*;
 import com.doan.payload.*;
 import com.doan.repository.MasterDetailRepository;
@@ -40,12 +37,13 @@ public class MasterDetailService {
             masterDetail.setStudentClass(addMasterDetailRequest.getStudentClass());
             masterDetail.setTitleNameEn(addMasterDetailRequest.getTitleNameEn());
             masterDetail.setTitleNameVn(addMasterDetailRequest.getTitleNameVn());
+            masterDetail.setStatus(TeachershipStatus.PENDING);
             Master master = masterRepository.findById(addMasterDetailRequest.getMasterId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid MasterId: " + addMasterDetailRequest.getMasterId()));
             masterDetail.setMaster(master);
-//            Teacher teacher = teacherRepository.findById(addMasterDetailRequest.getTeacherHDId())
-//                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + addMasterDetailRequest.getTeacherHDId()));
-//            masterDetail.setTeacherHD(teacher);
+            Teacher teacher = teacherRepository.findById(addMasterDetailRequest.getTeacherHDId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + addMasterDetailRequest.getTeacherHDId()));
+            masterDetail.setTeacherHD(teacher);
             masterDetailRepository.save(masterDetail);
             return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_SUCCES_ADD), HttpStatus.OK);
         } catch (Exception e) {
@@ -109,36 +107,36 @@ public class MasterDetailService {
         }
     }
 
-//    public ResponseEntity<?> getMasterDetailByGVHD(Optional<Teacher> teacher) {
-//        List<MasterDetailDTO> masterDetailByTeacherResponDTOS = new ArrayList<>();
-//        GetMasterDetailRespon respon = new GetMasterDetailRespon();
-//        try{
-//            List<MasterDetail> masterDetails = masterDetailRepository.findMasterDetailsByTeacherHD(teacher);
-//            for(MasterDetail masterDetail : masterDetails) {
-//                MasterDetailDTO masterDetailByTeacherResponDTO = new MasterDetailDTO();
-//                masterDetailByTeacherResponDTO.setMasterDetailId(masterDetail.getMasterDetailId());
-//                masterDetailByTeacherResponDTO.setMssv(masterDetail.getMssv());
-//                masterDetailByTeacherResponDTO.setStudentName(masterDetail.getStudentName());
-//                masterDetailByTeacherResponDTO.setStudentClass(masterDetail.getStudentClass());
-//                masterDetailByTeacherResponDTO.setTitleNameVn(masterDetail.getTitleNameVn());
-//                masterDetailByTeacherResponDTO.setTitleNameEn(masterDetail.getTitleNameEn());
-//                masterDetailByTeacherResponDTO.setScoreArgument(masterDetail.getScoreArgument());
-//                masterDetailByTeacherResponDTO.setScoreCoucil(masterDetail.getScoreCoucil());
-//                if (masterDetail.getMaster() != null) {
-//                    masterDetailByTeacherResponDTO.setMasterName(masterDetail.getMaster().getMasterName());
-//                }
-//                masterDetailByTeacherResponDTOS.add(masterDetailByTeacherResponDTO);
-//            }
-//            respon.setCode(Constants.SUCCCES_CODE);
-//            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES);
-//            respon.setMasterDetails(masterDetailByTeacherResponDTOS);
-//            return new ResponseEntity<>(respon, HttpStatus.OK);
-//        } catch (Exception e) {
-//            respon.setCode(Constants.ERR_CODE);
-//            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR);
-//            return new ResponseEntity<>(respon, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    public ResponseEntity<?> getMasterDetailByGVHD(Optional<Teacher> teacher) {
+        List<MasterDetailDTO> masterDetailByTeacherResponDTOS = new ArrayList<>();
+        GetMasterDetailRespon respon = new GetMasterDetailRespon();
+        try{
+            List<MasterDetail> masterDetails = masterDetailRepository.findMasterDetailsByTeacherHD(teacher);
+            for(MasterDetail masterDetail : masterDetails) {
+                MasterDetailDTO masterDetailByTeacherResponDTO = new MasterDetailDTO();
+                masterDetailByTeacherResponDTO.setMasterDetailId(masterDetail.getMasterDetailId());
+                masterDetailByTeacherResponDTO.setMssv(masterDetail.getMssv());
+                masterDetailByTeacherResponDTO.setStudentName(masterDetail.getStudentName());
+                masterDetailByTeacherResponDTO.setStudentClass(masterDetail.getStudentClass());
+                masterDetailByTeacherResponDTO.setTitleNameVn(masterDetail.getTitleNameVn());
+                masterDetailByTeacherResponDTO.setTitleNameEn(masterDetail.getTitleNameEn());
+                masterDetailByTeacherResponDTO.setScoreArgument(masterDetail.getScoreArgument());
+                masterDetailByTeacherResponDTO.setScoreCoucil(masterDetail.getScoreCoucil());
+                if (masterDetail.getMaster() != null) {
+                    masterDetailByTeacherResponDTO.setMasterName(masterDetail.getMaster().getMasterName());
+                }
+                masterDetailByTeacherResponDTOS.add(masterDetailByTeacherResponDTO);
+            }
+            respon.setCode(Constants.SUCCCES_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES);
+            respon.setMasterDetails(masterDetailByTeacherResponDTOS);
+            return new ResponseEntity<>(respon, HttpStatus.OK);
+        } catch (Exception e) {
+            respon.setCode(Constants.ERR_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR);
+            return new ResponseEntity<>(respon, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
     public ResponseEntity<?> getMasterDetailByGVPB(Optional<Teacher> teacher) {
@@ -240,7 +238,11 @@ public class MasterDetailService {
         try{
             MasterDetail masterDetail = masterDetailRepository.findById(editMasterDetailByGVHDRequest.getMasterDetailId())
                     .orElseThrow();
-            masterDetail.setStatusTeacher(editMasterDetailByGVHDRequest.getStatusTeacher());
+            Teacher teacher = teacherRepository.findById(editMasterDetailByGVHDRequest.getTeacherHDId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + editMasterDetailByGVHDRequest.getTeacherHDId()));
+            masterDetail.setTeacherHD(teacher);
+            masterDetail.setStatus(TeachershipStatus.PENDING);
+//            masterDetail.setStatusTeacher(editMasterDetailByGVHDRequest.getStatusTeacher());
             masterDetailRepository.save(masterDetail);
             return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_SUCCES), HttpStatus.OK);
         } catch (Exception e) {
@@ -352,47 +354,89 @@ public class MasterDetailService {
 //        }
     }
 
-//       @Transactional
-//    public  ResponseEntity<?> getStudent(Long teacher_hd_id){
-////       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-////            AuthUserDetails userDetails = (AuthUserDetails) authentication.getPrincipal();
-//        List<MasterDetailDTO> masterDetailByTeacherResponDTOS = new ArrayList<>();
-//        GetMasterDetailRespon respon = new GetMasterDetailRespon();
-//        try{
-//            List<MasterDetail> masterDetails = masterDetailRepository.listUserByUserId(teacher_hd_id);
-//            for(MasterDetail masterDetail : masterDetails) {
-//                MasterDetailDTO masterDetailByTeacherResponDTO = new MasterDetailDTO();
-//                masterDetailByTeacherResponDTO.setMasterDetailId(masterDetail.getMasterDetailId());
-//                masterDetailByTeacherResponDTO.setMssv(masterDetail.getMssv());
-//                masterDetailByTeacherResponDTO.setStudentName(masterDetail.getStudentName());
-//                masterDetailByTeacherResponDTO.setStudentClass(masterDetail.getStudentClass());
-//                masterDetailByTeacherResponDTO.setTitleNameVn(masterDetail.getTitleNameVn());
-//                masterDetailByTeacherResponDTO.setTitleNameEn(masterDetail.getTitleNameEn());
-//                masterDetailByTeacherResponDTO.setScoreArgument(masterDetail.getScoreArgument());
-//                masterDetailByTeacherResponDTO.setScoreCoucil(masterDetail.getScoreCoucil());
-//                if (masterDetail.getMaster() != null) {
-//                    masterDetailByTeacherResponDTO.setMasterName(masterDetail.getMaster().getMasterName());
-//                    masterDetailByTeacherResponDTO.setStartDate(masterDetail.getMaster().getStartDate());
-//                    masterDetailByTeacherResponDTO.setEndDate(masterDetail.getMaster().getEndDate());
-//                }
-////                if(masterDetail.getTeacherHD() != null){
-////                    masterDetailByTeacherResponDTO.setTeacherHD(masterDetail.getTeacherHD().getTeacherName());
-////                }
-//                if(masterDetail.getTeacherPB() != null){
-//                    masterDetailByTeacherResponDTO.setTeacherPB(masterDetail.getTeacherPB().getTeacherName());
-//                }
-//                masterDetailByTeacherResponDTOS.add(masterDetailByTeacherResponDTO);
-//            }
-//            respon.setCode(Constants.SUCCCES_CODE);
-//            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES);
-//            respon.setMasterDetails(masterDetailByTeacherResponDTOS);
-//            return new ResponseEntity<>(respon, HttpStatus.OK);
-//        } catch (Exception e) {
-//            respon.setCode(Constants.ERR_CODE);
-//            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR);
-//            return new ResponseEntity<>(respon, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//   }
+       @Transactional
+    public  ResponseEntity<?> getStudent(Long teacher_hd_id){
+        List<MasterDetailDTO> masterDetailByTeacherResponDTOS = new ArrayList<>();
+        GetMasterDetailRespon respon = new GetMasterDetailRespon();
+        try{
+            List<MasterDetail> masterDetails = masterDetailRepository.listUserByUserId(teacher_hd_id);
+            for(MasterDetail masterDetail : masterDetails) {
+                MasterDetailDTO masterDetailByTeacherResponDTO = new MasterDetailDTO();
+                masterDetailByTeacherResponDTO.setMasterDetailId(masterDetail.getMasterDetailId());
+                masterDetailByTeacherResponDTO.setMssv(masterDetail.getMssv());
+                masterDetailByTeacherResponDTO.setStudentName(masterDetail.getStudentName());
+                masterDetailByTeacherResponDTO.setStudentClass(masterDetail.getStudentClass());
+                masterDetailByTeacherResponDTO.setTitleNameVn(masterDetail.getTitleNameVn());
+                masterDetailByTeacherResponDTO.setTitleNameEn(masterDetail.getTitleNameEn());
+                masterDetailByTeacherResponDTO.setScoreArgument(masterDetail.getScoreArgument());
+                masterDetailByTeacherResponDTO.setScoreCoucil(masterDetail.getScoreCoucil());
+                if (masterDetail.getMaster() != null) {
+                    masterDetailByTeacherResponDTO.setMasterName(masterDetail.getMaster().getMasterName());
+                    masterDetailByTeacherResponDTO.setStartDate(masterDetail.getMaster().getStartDate());
+                    masterDetailByTeacherResponDTO.setEndDate(masterDetail.getMaster().getEndDate());
+                }
+//               if(masterDetail.getStatus().equals("ACCEPTED")){
+                   if(masterDetail.getTeacherHD() != null ){
+                       masterDetailByTeacherResponDTO.setTeacherHD(masterDetail.getTeacherHD().getTeacherName());
+                   }
+//               }
+                if(masterDetail.getTeacherPB() != null){
+                    masterDetailByTeacherResponDTO.setTeacherPB(masterDetail.getTeacherPB().getTeacherName());
+                }
+                masterDetailByTeacherResponDTOS.add(masterDetailByTeacherResponDTO);
+            }
+            respon.setCode(Constants.SUCCCES_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES);
+            respon.setMasterDetails(masterDetailByTeacherResponDTOS);
+            return new ResponseEntity<>(respon, HttpStatus.OK);
+        } catch (Exception e) {
+            respon.setCode(Constants.ERR_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR);
+            return new ResponseEntity<>(respon, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+   }
+
+    @Transactional
+    public  ResponseEntity<?> getStudentInvite(Long teacher_hd_id){
+        List<MasterDetailDTO> masterDetailByTeacherResponDTOS = new ArrayList<>();
+        GetMasterDetailRespon respon = new GetMasterDetailRespon();
+        try{
+            List<MasterDetail> masterDetails = masterDetailRepository.listStudentInviteTeacher(teacher_hd_id);
+            for(MasterDetail masterDetail : masterDetails) {
+                MasterDetailDTO masterDetailByTeacherResponDTO = new MasterDetailDTO();
+                masterDetailByTeacherResponDTO.setMasterDetailId(masterDetail.getMasterDetailId());
+                masterDetailByTeacherResponDTO.setMssv(masterDetail.getMssv());
+                masterDetailByTeacherResponDTO.setStudentName(masterDetail.getStudentName());
+                masterDetailByTeacherResponDTO.setStudentClass(masterDetail.getStudentClass());
+                masterDetailByTeacherResponDTO.setTitleNameVn(masterDetail.getTitleNameVn());
+                masterDetailByTeacherResponDTO.setTitleNameEn(masterDetail.getTitleNameEn());
+                masterDetailByTeacherResponDTO.setScoreArgument(masterDetail.getScoreArgument());
+                masterDetailByTeacherResponDTO.setScoreCoucil(masterDetail.getScoreCoucil());
+                if (masterDetail.getMaster() != null) {
+                    masterDetailByTeacherResponDTO.setMasterName(masterDetail.getMaster().getMasterName());
+                    masterDetailByTeacherResponDTO.setStartDate(masterDetail.getMaster().getStartDate());
+                    masterDetailByTeacherResponDTO.setEndDate(masterDetail.getMaster().getEndDate());
+                }
+//               if(masterDetail.getStatus().equals("ACCEPTED")){
+                if(masterDetail.getTeacherHD() != null ){
+                    masterDetailByTeacherResponDTO.setTeacherHD(masterDetail.getTeacherHD().getTeacherName());
+                }
+//               }
+                if(masterDetail.getTeacherPB() != null){
+                    masterDetailByTeacherResponDTO.setTeacherPB(masterDetail.getTeacherPB().getTeacherName());
+                }
+                masterDetailByTeacherResponDTOS.add(masterDetailByTeacherResponDTO);
+            }
+            respon.setCode(Constants.SUCCCES_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES);
+            respon.setMasterDetails(masterDetailByTeacherResponDTOS);
+            return new ResponseEntity<>(respon, HttpStatus.OK);
+        } catch (Exception e) {
+            respon.setCode(Constants.ERR_CODE);
+            respon.setMessage(Constants.MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR);
+            return new ResponseEntity<>(respon, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
    @Transactional
     public GetStudent getMaterById(Long masterDetailId){
@@ -407,7 +451,7 @@ public class MasterDetailService {
                .titleNameVn(masterDetail.getTitleNameVn())
                .titleNameEn(masterDetail.getTitleNameEn())
                .matername(masterDetail.getMaster().getMasterName())
-//               .teacherName(masterDetail.getTeacherHD().getTeacherName())
+               .teacherName(masterDetail.getTeacherHD().getTeacherName())
                .startDate(masterDetail.getMaster().getStartDate())
                .endDate(masterDetail.getMaster().getEndDate());
                 if(masterDetail.getTeacherPB() != null){
@@ -470,5 +514,30 @@ public class MasterDetailService {
         }
     }
 
+
+    public MasterDetail acceptMasterDetails(Long masterDetailId, Long teacherHDid){
+        MasterDetail masterDetail = masterDetailRepository.findById(masterDetailId)
+                .orElseThrow(() -> new RuntimeException("MasterDetail not found with ID: " + masterDetailId));
+
+        if (masterDetail.getTeacherHD() == null || !masterDetail.getTeacherHD().getTeacherId().equals(teacherHDid)) {
+            throw new RuntimeException("TeacherHD not found with ID: " + teacherHDid);
+        }
+
+        masterDetail.setStatus(TeachershipStatus.ACCEPTED);
+        return masterDetailRepository.save(masterDetail);
+    }
+
+
+    public MasterDetail updateStatusNotAccept(Long masterDetailId, Long teacherHDid) {
+        MasterDetail masterDetail = masterDetailRepository.findById(masterDetailId)
+                .orElseThrow(() -> new RuntimeException("MasterDetail not found with ID: " + masterDetailId));
+
+        if (masterDetail.getTeacherHD() == null || !masterDetail.getTeacherHD().getTeacherId().equals(teacherHDid)) {
+            throw new RuntimeException("TeacherHD not found with ID: " + teacherHDid);
+        }
+
+        masterDetail.setStatus(TeachershipStatus.NOTACCEPTED);
+        return masterDetailRepository.save(masterDetail);
+    }
 
 }

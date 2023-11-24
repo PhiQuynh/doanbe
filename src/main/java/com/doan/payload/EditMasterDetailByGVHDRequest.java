@@ -5,5 +5,7 @@ import lombok.Data;
 @Data
 public class EditMasterDetailByGVHDRequest {
     private Long masterDetailId;
-    private Long statusTeacher;
+    private Long teacherHDId;
+//    private String status;
+//    private Long statusTeacher;
 }

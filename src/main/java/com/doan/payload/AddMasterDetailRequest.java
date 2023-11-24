@@ -11,4 +11,5 @@ public class AddMasterDetailRequest {
     private String titleNameEn;
     private Long masterId;
     private Long teacherHDId;
+//    private String status;
 }

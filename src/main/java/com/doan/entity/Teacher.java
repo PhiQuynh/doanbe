@@ -42,8 +42,8 @@ public class Teacher {
     @JsonIgnore
     private List<TeacherCoucil> teacherCoucils;
 
-//    @OneToMany(mappedBy = "teacherHD", cascade = CascadeType.ALL)
-//    private List<MasterDetail> masterDetailHDs;
+    @OneToMany(mappedBy = "teacherHD", cascade = CascadeType.ALL)
+    private List<MasterDetail> masterDetailHDs;
 
     @OneToMany(mappedBy = "teacherPB", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -59,7 +59,7 @@ public class Teacher {
     @Column(name = "max_students_pb")
     private Integer maxStudentsPB;
 
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<TeacherSudent> sudentList;
+//    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private List<TeacherSudent> sudentList;
 }

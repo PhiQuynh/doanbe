@@ -1,13 +1,17 @@
 package com.doan.controller;
 
+import com.doan.config.Constants;
 import com.doan.dto.GetCouncli;
+import com.doan.dto.ListTeacherByCouncli;
 import com.doan.entity.Coucil;
 import com.doan.entity.Teacher;
 import com.doan.entity.TeacherCoucil;
+import com.doan.payload.ResponseSucces;
 import com.doan.repository.CoucilRepository;
 import com.doan.repository.TeacherCoucliRepository;
 import com.doan.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +35,7 @@ public class TeacherCouncliController {
      // add giảng viên theo hội đồng
 
     @PostMapping("/teacher/{teacherId}/council/{councilId}")
-    public ResponseEntity<String> addTeacherToCouncil(
+    public ResponseEntity<?> addTeacherToCouncil(
             @PathVariable Long teacherId,
             @PathVariable Long councilId
     ) {
@@ -47,32 +51,35 @@ public class TeacherCouncliController {
             teacherCouncil.setCoucil(council);
             repository.save(teacherCouncil);
 
-            return ResponseEntity.ok("Thêm giáo viên vào hội đồng thành công!");
+            return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_TEACHER_ADD_COUNCLI), HttpStatus.OK);
         }
-
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/council/{councilId}/teachers")
-    public ResponseEntity<List<Teacher>> getTeachersByCouncilId(@PathVariable Long councilId) {
+    public ResponseEntity<List<ListTeacherByCouncli>> getTeachersByCouncilId(@PathVariable Long councilId) {
         List<TeacherCoucil> teacherCouncils = repository.findByCoucilCoucilId(councilId);
-        List<Teacher> teachers = new ArrayList<>();
-
+        List<ListTeacherByCouncli> teachers = new ArrayList<>();
         for (TeacherCoucil teacherCouncil : teacherCouncils) {
-            teachers.add(teacherCouncil.getTeacher());
-        }
+            Teacher teacher = teacherCouncil.getTeacher();
+            ListTeacherByCouncli listTeacherByCouncli = ListTeacherByCouncli.builder()
+                    .teacherId(teacher.getTeacherId())
+                    .teacherName(teacher.getTeacherName())
+                    .email(teacher.getEmail())
+                    .phone(teacher.getPhone())
+                    .researchDirection(teacher.getResearchDirection())
+                    .build();
 
+            teachers.add(listTeacherByCouncli);
+        }
         if (!teachers.isEmpty()) {
             return ResponseEntity.ok(teachers);
         }
-
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<List<GetCouncli>> getCouncliByTeacher(@PathVariable Long teacherId) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        AuthUserDetails userDetails = (AuthUserDetails) authentication.getPrincipal();
         List<TeacherCoucil> teacherCouncils = repository.findByTeacherTeacherId(teacherId);
         List<GetCouncli> getCounclis = new ArrayList<>();
 

@@ -29,14 +29,14 @@ public class Constants {
 
     public static final String MESSAGE_ADD_COUCIL_SUCCES = "Thêm hội dồng thành công";
     public static final String MESSAGE_ADD_COUCIL_ERR = "Thêm hội dồng thất bại";
-
+    public static final String MESSAGE_TEACHER_ADD_COUNCLI = "Thêm giáo viên vào hội đồng thành công!";
     public static final String MESSAGE_ADD_SCORE_COUCIL_SUCCES = "Thêm điểm hội dồng thành công";
     public static final String MESSAGE_ADD_SCORE_COUCIL_ERR = "Thêm điểm hội dồng thất bại";
     public static final String MESSAGE_ADD_SCORE_ARGUMENT_SUCCES = "Thêm điểm phản biện thành công";
     public static final String MESSAGE_ADD_SCORE_ARGUMENT_ERR = "Thêm điểm phản biện thất bại";
     public static final String MESSAGE_GET_MASTER_DETAIL_BY_GVHD_SUCCCES = "Lấy ra thành công";
     public static final String MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR = "Lấy ra thất bại";
-
+    public static final String MASTER_DETAIL_ADD_COUNCLI = "Thêm sinh viên vào hôi đồng thành công";
     public static final String MESSAGE_GET_MASTER_DETAIL_BY_GVHD_ERR_2 = "Không có giảng viên này";
     public static final String MESSAGE_ERR_EDIT_USER = "Sai tên tài khoản hoặc mật khẩu";
     public static final String MESSAGE_ERR_LOGIN= "Sai tên tài khoản hoặc mật khẩu";
@@ -46,7 +46,7 @@ public class Constants {
     public static final String MESSAGE_EDIT_PASSWORD_SUCCES = "Đổi mật khẩu thành công";
 
     public static final String MESSAGE_EDIT_PASSWORD_ERR = "Sai username hoặc password";
-    public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_SUCCES = "Xác nhận hướng dẫn cho sinh viên thành công";
+    public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_SUCCES = "Gửi lời mời cho giảng viên hướng dẫn mới thành công";
     public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_ERR = "Xác nhận hướng dẫn cho sinh viên thất bại";
     public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_DEPARTMENT_SUCCES = "Duyệt đồ án cho sinh viên thành công";
 
@@ -73,9 +73,11 @@ public class Constants {
     };
     public static final String[] ENDPOINTS_PUBLIC = new String[] {
             "/",
+            "QLCSVC/api/file/**",
             "/user/login/**",
             "/user/register/**",
-            "/error/**"
+            "/error/**",
+
     };
     public static final String[] ENDPOINTS_WITH_ROLE = new String[] {
             "/user/**"

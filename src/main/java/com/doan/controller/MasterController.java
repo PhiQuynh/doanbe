@@ -64,22 +64,15 @@ public class MasterController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Master> updateMaster(@PathVariable Long id, @RequestBody UpdateMaster updatedMaster) {
-        Optional<Master> optionalMaster = masterRepository.findById(id);
-
+       public ResponseEntity<?> updateMaster(@PathVariable Long id, @RequestBody UpdateMaster updatedMaster) {
+       Master optionalMaster = masterRepository.findById(id).orElseThrow();
         Subject subject = subjectRepository.findById(updatedMaster.getSubjectId()).orElseThrow();
-
-        if (optionalMaster.isPresent()) {
-            Master existingMaster = optionalMaster.get();
-            existingMaster.setMasterName(updatedMaster.getMasterName());
-            existingMaster.setStartDate(updatedMaster.getStartDate());
-            existingMaster.setEndDate(updatedMaster.getEndDate());
-            existingMaster.setSubject(subject);
-            Master savedMaster = masterRepository.save(existingMaster);
-            return ResponseEntity.ok(savedMaster);
-        }
-
-        return ResponseEntity.notFound().build();
+        optionalMaster.setMasterName(updatedMaster.getMasterName());
+        optionalMaster.setStartDate(updatedMaster.getStartDate());
+        optionalMaster.setEndDate(updatedMaster.getEndDate());
+        optionalMaster.setSubject(subject);
+        masterRepository.save(optionalMaster);
+        return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_SUCCES_EDIT), HttpStatus.OK);
     }
 
     @DeleteMapping("/{masterId}")

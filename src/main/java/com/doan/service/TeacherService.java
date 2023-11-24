@@ -3,11 +3,9 @@ package com.doan.service;
 import com.doan.DoanApplication;
 import com.doan.config.Constants;
 import com.doan.config.jwt.AuthUserDetails;
+import com.doan.dto.TeacherAcceptMasterDetail;
 import com.doan.dto.TeacherDTO;
-import com.doan.entity.Coucil;
-import com.doan.entity.Subject;
-import com.doan.entity.Teacher;
-import com.doan.entity.User;
+import com.doan.entity.*;
 import com.doan.payload.*;
 import com.doan.repository.*;
 import org.slf4j.Logger;
@@ -137,35 +135,7 @@ public class TeacherService {
         }
     }
 
-//    public ResponseEntity<?> findAllByCoucil(Long idCoucil) {
-//        List<TeacherDTO> teacherDTOS = new ArrayList<>();
-//        GetTeacherByCoucilRespon respon = new GetTeacherByCoucilRespon();
-//        try {
-//            List<Teacher> teacherPage;
-//            Coucil coucil = coucilRepository.findById(idCoucil)
-//                    .orElseThrow(() -> new IllegalArgumentException("Invalid idCoucil: " + idCoucil));
-//            teacherPage = teacherRepository.findAllByCoucil(coucil);
-//
-//            for (Teacher teacher : teacherPage) {
-//                TeacherDTO teacherDTO = new TeacherDTO();
-//                teacherDTO.setTeacherId(teacher.getTeacherId());
-//                teacherDTO.setEmail(teacher.getEmail());
-//                teacherDTO.setPhone(teacher.getPhone());
-//                teacherDTO.setTeacherName(teacher.getTeacherName());
-//                teacherDTO.setResearchDirection(teacher.getResearchDirection());
-//                if (teacher.getSubject() != null) {
-//                    teacherDTO.setSubjectName(teacher.getSubject().getSubjectName());
-//                }
-//                teacherDTOS.add(teacherDTO);
-//            }
-//            respon.setCode(Constants.SUCCCES_CODE);
-//            respon.setMessage(Constants.MESSAGE_GET_ALL_SUCCES);
-//            respon.setTeachers(teacherDTOS);
-//            return new ResponseEntity<>(respon, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(new ResponErr(Constants.ERR_CODE, Constants.MESSAGE_GET_ALL_ERR), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
 
     public ResponseEntity<?> getTeacherById(Long id) {
         try{
@@ -257,6 +227,7 @@ public class TeacherService {
             return new ResponseEntity<>(new ResponErr(Constants.ERR_CODE, Constants.MESSAGE_GET_ALL_ERR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 //    public ResponseEntity<?> deleteTeacher(Long id) {
 //        try{
