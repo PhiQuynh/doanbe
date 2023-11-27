@@ -540,4 +540,10 @@ public class MasterDetailService {
         return masterDetailRepository.save(masterDetail);
     }
 
+    public List<MasterDetail> getMasterDetailsByMasterId(Long masterId) {
+        return masterDetailRepository.findByMasterMasterId(masterId);
+    }
+
+
+
 }

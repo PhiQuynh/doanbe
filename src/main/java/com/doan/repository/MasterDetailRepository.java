@@ -54,4 +54,26 @@ public interface MasterDetailRepository extends JpaRepository<MasterDetail, Long
     Page<MasterDetail> findAllByMater(@Param("studentName") String studentName,
                                       @Param("master") Master master,
                                       Pageable pageable);
+
+    @Query(value = "Select Count(*)\n" +
+            "from masters_details as m\n" +
+            "where m.teacher_hd_id = ? and m.status = \"ACCEPTED\"", nativeQuery = true)
+    Long countMasterDetailByTeacherHd(Long teacherHdId);
+
+    @Query(value = "Select Count(*)\n" +
+            "from masters_details as m\n" +
+            "where m.teacher_pb_id = ? ", nativeQuery = true)
+    Long countMasterDetailByTeacherPBId(Long teacherPbId);
+
+    @Query(value = "Select Count(*)\n" +
+            "from masters_details as m \n" +
+            "where m.score_argument < 5 or m.score_coucil < 5", nativeQuery = true)
+    Long countSVLessThan();
+
+    @Query(value = "Select Count(*)\n" +
+            "from masters_details as m \n" +
+            "where m.score_argument >= 5 and m.score_coucil >=5;", nativeQuery = true)
+    Long countSVMoreThan();
+
+    List<MasterDetail> findByMasterMasterId(Long masterId);
 }

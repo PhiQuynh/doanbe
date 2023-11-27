@@ -11,6 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/teacher")
 public class TeacherController {
@@ -90,5 +93,13 @@ public class TeacherController {
        @GetMapping("/getAll")
     public  ResponseEntity<?> getAll(){
         return new ResponseEntity<>(teacherRepository.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public Long getCountOfMasterDetails() {
+//        Map<String, Long> message = new HashMap<>();
+        return teacherRepository.count();
+//        message.put("count", teacherRepository.count());
+//        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

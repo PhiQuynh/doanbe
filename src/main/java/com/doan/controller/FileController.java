@@ -19,9 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/QLCSVC/api/file")
-//@Slf4j
-//@CrossOrigin(origins = "http://localhost:5000")
+@RequestMapping("/file")
 public class FileController {
 
     private final FileDBServiceImpl fileDBService;
@@ -35,12 +33,11 @@ public class FileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
-    @RequestMapping(value = "/upload", method= RequestMethod.POST)
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
             fileDBService.save(file);
-
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
         } catch (Exception e) {
@@ -60,34 +57,5 @@ public class FileController {
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
-    //
-//    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-//        String message = "";
-//        try {
-//            fileDBService.save(file);
-//            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-//            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-//        } catch (Exception e) {
-//            message = "Could not upload the file: " + file.getOriginalFilename() + ". Error: " + e.getMessage();
-//            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-//        }
-//    }
-//
-//    @GetMapping("/files")
-//    public ResponseEntity<List<FileInfo>> getListFiles() {
-//
-//        return new ResponseEntity<>(infoRepository.findAll(), HttpStatus.OK);
-
-//        List<FileInfo> fileInfos = fileDBService.loadAll().map(path -> {
-//            String filename = path.toFile().getName();
-//            String url = MvcUriComponentsBuilder
-//                    .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
-//
-//            return new FileInfo(filename, url);
-//        }).collect(Collectors.toList());
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-//    }
 
 }

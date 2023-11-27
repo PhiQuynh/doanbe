@@ -13,5 +13,5 @@ public class AddTeacherRequest {
     private Long userId;
     private String researchDirection;
     private String sex;
-    private String image;
+//    private String image;
 }

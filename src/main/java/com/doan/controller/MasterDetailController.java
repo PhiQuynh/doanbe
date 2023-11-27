@@ -18,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -152,7 +155,36 @@ public class MasterDetailController {
 
     @GetMapping("/count")
     public Long getCountOfMasterDetails() {
+//        Map<String, Long> message = new HashMap<>();
         return masterDetailRepository.count();
+//        message.put("count", masterDetailRepository.count());
+//        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/teacherHD/{teacherHDId}")
+    public Long countMasterDetailByTeacherHd(@PathVariable Long teacherHDId){
+        return masterDetailRepository.countMasterDetailByTeacherHd(teacherHDId);
+    }
+
+    @GetMapping("/count/teacherPB/{teacherPB}")
+    public Long countMasterDetailByTeacherPB(@PathVariable Long teacherPB){
+        return masterDetailRepository.countMasterDetailByTeacherPBId(teacherPB);
+    }
+
+    @GetMapping("/count/SV/less")
+    public Long countSVLessThan(){
+        return masterDetailRepository.countSVLessThan();
+    }
+
+    @GetMapping("/count/SV/success")
+    public Long countSVMoreThan(){
+        return masterDetailRepository.countSVMoreThan();
+    }
+
+    @GetMapping("/master/{masterId}")
+    public ResponseEntity<List<MasterDetail>> getMasterDetailsByMasterId(@PathVariable Long masterId) {
+        List<MasterDetail> masterDetails = masterDetailService.getMasterDetailsByMasterId(masterId);
+        return new ResponseEntity<>(masterDetails, HttpStatus.OK);
     }
 
 }

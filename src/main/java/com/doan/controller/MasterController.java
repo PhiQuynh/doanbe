@@ -18,7 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -83,5 +85,13 @@ public class MasterController {
         masterRepository.deleteById(masterId);
         return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.DELETE_SUCCESS), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/count")
+    public Long getCountOfMasterDetails() {
+//        Map<String, Long> message = new HashMap<>();
+        return masterRepository.count();
+//        message.put("count", masterRepository.count());
+//        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

@@ -46,7 +46,7 @@ public class TeacherService {
             teacher.setPhone(addTeacherRequest.getPhone());
             teacher.setResearchDirection(addTeacherRequest.getResearchDirection());
             teacher.setSex(addTeacherRequest.getSex());
-            teacher.setImage(addTeacherRequest.getImage());
+//            teacher.setImage(addTeacherRequest.getImage());
             Subject subject = subjectRepository.findById(addTeacherRequest.getSubjectId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid subjectId: " + addTeacherRequest.getSubjectId()));
             teacher.setSubject(subject);

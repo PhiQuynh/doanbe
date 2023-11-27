@@ -13,10 +13,13 @@ import com.doan.repository.MasterRepository;
 import com.doan.repository.SubjectRepository;
 import com.doan.service.CoucilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -70,5 +73,13 @@ public class CoucilController {
     @GetMapping("/getAll")
     public List<GetCouncli> getCounclis(){
         return coucilService.getCounclis();
+    }
+
+    @GetMapping("/count")
+    public Long getCountOfMasterDetails() {
+//        Map<String, Long> message = new HashMap<>();
+        return coucilRepository.count();
+//        message.put("count", coucilRepository.count());
+//        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

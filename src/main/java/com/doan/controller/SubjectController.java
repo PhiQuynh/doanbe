@@ -43,8 +43,5 @@ public class SubjectController {
     public ResponseEntity<?> countStudentsBySubjectId(@PathVariable Long subjectId) {
         return subjectService.countStudentsBySubjectId(subjectId);
     }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteSubject(@PathVariable Long id) {
-//        return subjectService.deleteSubject(id);
-//    }
+
 }
