@@ -6,6 +6,4 @@ import lombok.Data;
 public class EditMasterDetailByGVHDRequest {
     private Long masterDetailId;
     private Long teacherHDId;
-//    private String status;
-//    private Long statusTeacher;
 }

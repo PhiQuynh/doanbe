@@ -233,20 +233,18 @@ public class MasterDetailService {
         }
     }
 
-    @Transactional
     public ResponseEntity<?> editByGvhd(EditMasterDetailByGVHDRequest editMasterDetailByGVHDRequest) {
         try{
             MasterDetail masterDetail = masterDetailRepository.findById(editMasterDetailByGVHDRequest.getMasterDetailId())
                     .orElseThrow();
             Teacher teacher = teacherRepository.findById(editMasterDetailByGVHDRequest.getTeacherHDId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid TeacherHDId: " + editMasterDetailByGVHDRequest.getTeacherHDId()));
-            masterDetail.setTeacherHD(teacher);
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid teacherId: " + editMasterDetailByGVHDRequest.getTeacherHDId()));
+            masterDetail.setTeacherPB(teacher);
             masterDetail.setStatus(TeachershipStatus.PENDING);
-//            masterDetail.setStatusTeacher(editMasterDetailByGVHDRequest.getStatusTeacher());
             masterDetailRepository.save(masterDetail);
-            return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_SUCCES), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseSucces(Constants.SUCCCES_CODE, Constants.MESSAGE_PCPB_SUCCES), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponErr(Constants.ERR_CODE, Constants.MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_ERR), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponErr(Constants.ERR_CODE, Constants.MESSAGE_PCPB_ERR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

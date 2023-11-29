@@ -97,9 +97,6 @@ public class TeacherController {
 
     @GetMapping("/count")
     public Long getCountOfMasterDetails() {
-//        Map<String, Long> message = new HashMap<>();
         return teacherRepository.count();
-//        message.put("count", teacherRepository.count());
-//        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

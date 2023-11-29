@@ -47,7 +47,7 @@ public class Constants {
 
     public static final String MESSAGE_EDIT_PASSWORD_ERR = "Sai username hoặc password";
     public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_SUCCES = "Gửi lời mời cho giảng viên hướng dẫn mới thành công";
-    public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_ERR = "Xác nhận hướng dẫn cho sinh viên thất bại";
+    public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_GVHD_ERR = "Gửi lời mời hướng dẫn thất bại";
     public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_DEPARTMENT_SUCCES = "Duyệt đồ án cho sinh viên thành công";
 
     public static final String MESSAGE_EDIT_MASTER_DETAIL_BY_DEPARTMENT_ERR = "Duyệt đồ án cho sinh viên thất bại";
