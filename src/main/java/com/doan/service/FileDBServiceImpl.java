@@ -1,6 +1,7 @@
 package com.doan.service;
 
 
+import com.doan.exception.StorageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.stream.Stream;
@@ -19,6 +21,7 @@ import java.util.stream.Stream;
 public class FileDBServiceImpl implements FileDBService{
 
     private final Path root = Paths.get("uploads");
+//    private final Path rootLocation;
 
 //    private final FileInfoRepository infoRepository;
 
@@ -58,15 +61,38 @@ public class FileDBServiceImpl implements FileDBService{
 //        }
 //
 //    }
-
     @Override
-    public void save(MultipartFile file) {
+    public void store(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-        } catch (Exception e) {
-            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file.");
+            }
+            Path destinationFile = this.root.resolve(
+                            Paths.get(file.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            if (!destinationFile.getParent().equals(this.root.toAbsolutePath())) {
+                // This is a security check
+                throw new StorageException(
+                        "Cannot store file outside current directory.");
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to store file.", e);
         }
     }
+
+//    @Override
+//    public void save(MultipartFile file) {
+//        try {
+//            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+//        } catch (Exception e) {
+//            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+//        }
+//    }
 
     @Override
     public Resource load(String filename) {
